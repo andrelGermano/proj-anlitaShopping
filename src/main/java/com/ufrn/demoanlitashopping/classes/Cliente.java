@@ -15,6 +15,12 @@ public class Cliente {
         this.senha = senha;
     }
 
+    public Cliente(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     public int getId() {
         return id;
     }
