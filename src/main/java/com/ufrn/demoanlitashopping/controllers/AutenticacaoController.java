@@ -40,7 +40,15 @@ public class AutenticacaoController {
         } else {
             response.sendRedirect("index.html?msg=Login falhou");
         }
+
+
     }
 
+    @RequestMapping(value = "/doLogout", method = RequestMethod.GET)
+    public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        session.invalidate();
 
+        response.sendRedirect("index.html?msg=Usuario deslogado");
+    }
 }
