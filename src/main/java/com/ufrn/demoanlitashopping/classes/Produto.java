@@ -1,6 +1,11 @@
 package com.ufrn.demoanlitashopping.classes;
 
 public class Produto {
+    int id;
+    int preco;
+    String nome;
+    String Descricao;
+    int estoque;
     public Produto(int id, int preco, String nome, String descricao, int estoque) {
         super();
         this.id = id;
@@ -9,11 +14,9 @@ public class Produto {
         this.Descricao = descricao;
         this.estoque = estoque;
     }
-    int id;
-    int preco;
-    String nome;
-    String Descricao;
-    int estoque;
+    public Produto(){
+
+    }
     public int getId() {
         return id;
     }
@@ -40,6 +43,9 @@ public class Produto {
     }
     public int getEstoque() {
         return estoque;
+    }
+    public void setEstoque(int estoque){
+        this.estoque = estoque;
     }
     public void incrementaEstoque() {
         this.estoque++;

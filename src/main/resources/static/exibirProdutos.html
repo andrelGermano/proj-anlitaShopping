@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>exibir produtos lojista</title>
+    <title>Lojista Anlita</title>
 </head>
-    <body>
-        <h1>Exibindo produtos cadastrados dos lojista</h1>
-
+    <body style="display: flex; flex-direction: column;  align-items: center">
+        <div style="border: 2px solid black; padding: 10px;">
+            <h1>Espaço do Lojista</h1>
+            <form action="/listarProdutos" method="get" style="display: flex;">
+                <button>Mostrar Lista</button>
+            </form>
+            <form action="/redirectCadastro" method="get" style="display: flex;">
+                <button>Cadastrar Novos Produtos</button>
+            </form>
+        </div>
     </body>
 </html>
