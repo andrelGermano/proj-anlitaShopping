@@ -16,8 +16,7 @@ import java.util.Map;
 public class CarrinhoController {
 
     @GetMapping("/addCarrinho")
-    public void addCarrinho(@RequestParam int produtoId, @RequestParam String comando,
-                            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void addCarrinho(@RequestParam int produtoId, @RequestParam String comando, HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Verificar se o carrinho já existe nos cookies
         Map<Integer, Integer> carrinho = getCarrinhoFromCookies(request);
 

@@ -46,9 +46,9 @@ public class ListaProdutosController {
                         "<td>" + t1.getDescricao() + "</td>" +
                         "<td>" + t1.getPreco() + "</td>" +
                         "<td>" + t1.getEstoque() + "</td>" +
-                        "<td>" + "<a href='/addCarrinho?produtoId=" + t1.getId() + "&comando=add'>AdicionaraoCarrinho</a>" + "</td>" + // Link para adicionar ao carrinho
-                        "</tr>" +
-                        "<a href=/verCarrinho>Ver carrinho</a>");
+                        "<td>" + "<a href='/addCarrinho?produtoId=" + t1.getId() + "&comando=add'>Adicionar</a>" + "</td>" + // Link para adicionar ao carrinho
+                        "</tr>"
+                        );
             } else {
                 writer.println("<tr>" +
                         "<td>" + t1.getNome() + "</td>" +
@@ -59,7 +59,7 @@ public class ListaProdutosController {
                         "</tr>");
             }
         }
-        writer.println("</table>");
+        writer.println("</table>" + "<a href=/verCarrinho>Ver carrinho</a>");
 
         writer.println("</html>" +
                 "</body>");
