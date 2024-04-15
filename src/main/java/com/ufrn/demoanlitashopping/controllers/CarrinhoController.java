@@ -3,6 +3,7 @@ package com.ufrn.demoanlitashopping.controllers;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,10 +17,13 @@ public class CarrinhoController {
 
     @GetMapping("/addCarrinho")
     public void addCarrinho(@RequestParam int produtoId, @RequestParam String comando, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Verificar se o carrinho já existe nos cookies
-        Map<Integer, Integer> carrinho = getCarrinhoFromCookies(request);
+        HttpSession session = request.getSession(true); // Obtém a sessão do usuário ou cria uma nova se não existir
 
-        // Se o carrinho não existir, criar um novo
+        // Obtém o ID do cliente da sessão (você precisa implementar a lógica para armazenar o ID do cliente na sessão quando ele fizer login)
+        Integer clienteId = (Integer) session.getAttribute("clienteId");
+
+        // Verificar se o carrinho já existe na sessão do usuário
+        Map<Integer, Integer> carrinho = (Map<Integer, Integer>) session.getAttribute("carrinho_" + clienteId);
         if (carrinho == null) {
             carrinho = new HashMap<>();
         }
@@ -38,11 +42,30 @@ public class CarrinhoController {
             }
         }
 
-        // Armazenar o carrinho atualizado nos cookies
+        // Armazenar o carrinho atualizado na sessão do usuário usando o ID do cliente como chave
+        session.setAttribute("carrinho_" + clienteId, carrinho);
+
+        // Salvar o carrinho nos cookies
         salvarCarrinhoNosCookies(carrinho, response);
 
         // Redirecionar de volta à página de lista de produtos
         response.sendRedirect("listaProdutos.html");
+    }
+
+    private void salvarCarrinhoNosCookies(Map<Integer, Integer> carrinho, HttpServletResponse response) {
+        StringBuilder carrinhoString = new StringBuilder();
+        for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
+            carrinhoString.append(entry.getKey()).append(":").append(entry.getValue()).append("_");
+        }
+        if (carrinhoString.length() > 0) {
+            carrinhoString.deleteCharAt(carrinhoString.length() - 1);
+        }
+        Cookie carrinhoCookie = new Cookie("carrinho", carrinhoString.toString());
+        carrinhoCookie.setMaxAge(48 * 60 * 60); // Define a expiração do cookie para 48 horas
+        response.addCookie(carrinhoCookie);
+    }
+    public Map<Integer, Integer> getCarrinhoFromCookiesPublic(HttpServletRequest request) {
+        return getCarrinhoFromCookies(request);
     }
 
     private Map<Integer, Integer> getCarrinhoFromCookies(HttpServletRequest request) {
@@ -71,23 +94,6 @@ public class CarrinhoController {
                 }
             }
         }
-        return carrinho.isEmpty() ? null : carrinho;
-    }
-
-    public Map<Integer, Integer> getCarrinhoFromCookiesPublic(HttpServletRequest request) {
-        return getCarrinhoFromCookies(request);
-    }
-
-    private void salvarCarrinhoNosCookies(Map<Integer, Integer> carrinho, HttpServletResponse response) {
-        StringBuilder carrinhoString = new StringBuilder();
-        for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
-            carrinhoString.append(entry.getKey()).append(":").append(entry.getValue()).append("_");
-        }
-        if (carrinhoString.length() > 0) {
-            carrinhoString.deleteCharAt(carrinhoString.length() - 1);
-        }
-        Cookie carrinhoCookie = new Cookie("carrinho", carrinhoString.toString());
-        carrinhoCookie.setMaxAge(48 * 60 * 60);
-        response.addCookie(carrinhoCookie);
+        return carrinho;
     }
 }
