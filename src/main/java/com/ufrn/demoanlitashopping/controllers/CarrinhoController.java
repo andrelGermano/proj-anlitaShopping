@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,18 +44,28 @@ public class CarrinhoController {
         // Redirecionar de volta à página de lista de produtos
         response.sendRedirect("listaProdutos.html");
     }
+
     private Map<Integer, Integer> getCarrinhoFromCookies(HttpServletRequest request) {
         Map<Integer, Integer> carrinho = new HashMap<>();
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("carrinho".equals(cookie.getName())) {
-                    String[] itens = cookie.getValue().split(",");
-                    for (String item : itens) {
-                        String[] produtoInfo = item.split(":");
-                        int produtoId = Integer.parseInt(produtoInfo[0]);
-                        int quantidade = Integer.parseInt(produtoInfo[1]);
-                        carrinho.put(produtoId, quantidade);
+                    String cookieValue = cookie.getValue();
+                    if (!cookieValue.isEmpty()) {
+                        String[] itens = cookieValue.split("_");
+                        for (String item : itens) {
+                            String[] produtoInfo = item.split(":");
+                            if (produtoInfo.length >= 2) {
+                                try {
+                                    int produtoId = Integer.parseInt(produtoInfo[0]);
+                                    int quantidade = Integer.parseInt(produtoInfo[1]);
+                                    carrinho.put(produtoId, quantidade);
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
                     break;
                 }
@@ -64,6 +73,7 @@ public class CarrinhoController {
         }
         return carrinho.isEmpty() ? null : carrinho;
     }
+
     public Map<Integer, Integer> getCarrinhoFromCookiesPublic(HttpServletRequest request) {
         return getCarrinhoFromCookies(request);
     }
@@ -71,13 +81,13 @@ public class CarrinhoController {
     private void salvarCarrinhoNosCookies(Map<Integer, Integer> carrinho, HttpServletResponse response) {
         StringBuilder carrinhoString = new StringBuilder();
         for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
-            carrinhoString.append(entry.getKey()).append(":").append(entry.getValue()).append(",");
+            carrinhoString.append(entry.getKey()).append(":").append(entry.getValue()).append("_");
         }
         if (carrinhoString.length() > 0) {
-            carrinhoString.deleteCharAt(carrinhoString.length() - 1); // Remove a última vírgula
+            carrinhoString.deleteCharAt(carrinhoString.length() - 1);
         }
         Cookie carrinhoCookie = new Cookie("carrinho", carrinhoString.toString());
-        carrinhoCookie.setMaxAge(48 * 60 * 60); // 48 horas em segundos
+        carrinhoCookie.setMaxAge(48 * 60 * 60);
         response.addCookie(carrinhoCookie);
     }
 }
