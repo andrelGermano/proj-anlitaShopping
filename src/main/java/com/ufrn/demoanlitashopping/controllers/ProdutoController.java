@@ -26,7 +26,6 @@ public class ProdutoController {
 
         String browser = request.getHeader("pipoca");
 
-
         var listarProdutos = dao.listaProdutos();
 
         response.setContentType("text/html");

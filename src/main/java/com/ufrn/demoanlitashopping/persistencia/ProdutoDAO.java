@@ -8,9 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ProdutoDAO {
-    private Conexao con;
+    private static Conexao con;
     private String CAD = "INSERT INTO Produto (nome_produto, descricao, preco, quantidade_estoque) VALUES (?, ?, ?, ?)";
     private String REL ="SELECT * FROM Produto";
+    private static String ID ="SELECT * FROM Produto WHERE id = ?";
 
     public ProdutoDAO() {
         con = new Conexao("jdbc:postgresql://localhost:5432/anlitaShopping", "postgres", "17110521");
@@ -47,5 +48,24 @@ public class ProdutoDAO {
             System.out.println("Erro na busca: " + e.getMessage());
         }
         return produtos;
+    }
+
+    public static Produto getProdutoById(int produtoId) {
+
+        Produto p = null;
+        try {
+            con.conectar();
+            PreparedStatement ps = con.getConexao().prepareStatement(ID);
+            ps.setInt(1, produtoId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                p = new Produto(rs.getInt("id"), rs.getInt("preco"), rs.getString("nome_produto"), rs.getString("descricao"), rs.getInt("quantidade_estoque"));
+
+            }
+            con.desconectar();
+        } catch (Exception e) {
+            System.out.println("Erro na busca: " + e.getMessage());
+        }
+        return p;
     }
 }
