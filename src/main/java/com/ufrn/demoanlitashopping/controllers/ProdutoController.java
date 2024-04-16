@@ -30,14 +30,14 @@ public class ProdutoController {
 
         response.setContentType("text/html");
 
-        writer.println("<html>" +
-                "<body>");
+        writer.println("<html>" + "<head>" + "<title>Produtos</title>"+"</head>" +
+                "<body style='display: flex; flex-direction: column;  align-items: center; background-color: lightblue'>");
         if (browser != null) {
             writer.println(browser);
         }
 
-        writer.println("<h1>Espaço do Lojista</h1>");
-        writer.println("<table border='1'>" +
+        writer.println("<h1>Seu Produtos</h1>");
+        writer.println("<table border='1' style='background-color: white'>" +
                 "<tr>" +
                 "<th>Nome</th>" +
                 "<th>Descrição</th>" +
@@ -53,10 +53,12 @@ public class ProdutoController {
                     "<td>" + t1.getEstoque() + "</td>" +
                     "</tr>");
         }
-        writer.println("</table>");
+        writer.println("</table>" + "</br>" +
+                "<button>" + "<a href='exibirProdutos.html' style='text-decoration: none; color: black'>Voltar</a>"
 
-        writer.println("</html>" +
-                "</body>");
+        );
+
+        writer.println("</body>" + "</html>");
 
     }
     @GetMapping("/redirectCadastro")

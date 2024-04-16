@@ -23,14 +23,14 @@ public class ListaProdutosController {
 
         response.setContentType("text/html");
 
-        writer.println("<html>" +
-                "<body>");
+        writer.println("<html>" + "<head>" + "<title>Produtos Disponíveis</title>" + "</head>" +
+                "<body style='display: flex; flex-direction: column;  align-items: center; background-color: lightblue'>");
         if (browser != null) {
             writer.println(browser);
         }
 
-        writer.println("<h1>Espaço do Cliente</h1>");
-        writer.println("<table border='1'>" +
+        writer.println("<h1>Produtos Disponíveis</h1>");
+        writer.println("<table border='1' style='background: white'>" +
                 "<tr>" +
                 "<th>Nome</th>" +
                 "<th>Descrição</th>" +
@@ -59,7 +59,10 @@ public class ListaProdutosController {
                         "</tr>");
             }
         }
-        writer.println("</table>" + "<a href=/verCarrinho>Ver carrinho</a>");
+        writer.println("</table>" + "</br>" + "<button>"
+                + "<a href='/verCarrinho' style='text-decoration: none; color: black; margin-top: 10px '>Ver carrinho</a>"
+                + "</button>" + "</br>");
+        writer.println("<button>" + "<a href='listaProdutos.html' style='text-decoration: none; color: black'>Voltar</a>" + "</button>");
 
         writer.println("</html>" +
                 "</body>");
