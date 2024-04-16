@@ -21,6 +21,8 @@ public class CarrinhoController {
     public void addCarrinho(@RequestParam int produtoId, @RequestParam String comando, HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(true); // Obtém a sessão do usuário ou cria uma nova se não existir
 
+        Produto p = ProdutoDAO.getProdutoById(produtoId);
+
         // Obtém o ID do cliente da sessão (você precisa implementar a lógica para armazenar o ID do cliente na sessão quando ele fizer login)
         Integer clienteId = (Integer) session.getAttribute("clienteId");
 
@@ -32,8 +34,10 @@ public class CarrinhoController {
 
         // Adicionar ou remover o produto do carrinho
         if ("add".equals(comando)) {
+            p.diminuiEstoque();
             carrinho.put(produtoId, carrinho.getOrDefault(produtoId, 0) + 1);
         } else if ("remove".equals(comando)) {
+            p.incrementaEstoque();
             if (carrinho.containsKey(produtoId)) {
                 int quantidade = carrinho.get(produtoId);
                 if (quantidade > 1) {
@@ -97,7 +101,7 @@ public class CarrinhoController {
     }
 
     @GetMapping("/finalizarCompra")
-    public void finalizarCompra(@RequestParam int produtoId, @RequestParam String comando, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void finalizarCompra( HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Integer clienteId = (Integer) session.getAttribute("clienteId");
 
@@ -117,6 +121,13 @@ public class CarrinhoController {
             Produto produto = ProdutoDAO.getProdutoById(productId);
             p.decrementarEstoque(quantity, productId);
         }
+        // Limpa o carrinho sobrescrevendo o cookie com um novo cookie vazio
+        Cookie carrinhoCookie = new Cookie("carrinho_" + clienteId, "");
+        carrinhoCookie.setMaxAge(0); // Define o tempo de vida do cookie como zero para removê-lo
+        carrinhoCookie.setPath("/"); // Define o mesmo caminho do cookie que deseja excluir
+        response.addCookie(carrinhoCookie); // Adiciona o novo cookie à resposta para que seja enviado ao navegador e remova o cookie existente
 
+        // Redireciona para a página de lista de produtos do cliente
+        response.sendRedirect("/listaProdutosCliente");
     }
 }

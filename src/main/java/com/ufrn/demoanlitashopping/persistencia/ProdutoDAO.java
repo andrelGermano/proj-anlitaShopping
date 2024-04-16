@@ -12,7 +12,7 @@ public class ProdutoDAO {
     private String CAD = "INSERT INTO Produto (nome_produto, descricao, preco, quantidade_estoque) VALUES (?, ?, ?, ?)";
     private String REL ="SELECT * FROM Produto";
     private static String ID ="SELECT * FROM Produto WHERE id = ?";
-    private String ATU = "UPDATE Produto SET quantidade_estoque=? WHERE id=?";
+    private String ATU = "UPDATE Produto SET quantidade_estoque = quantidade_estoque - ? WHERE id=?";
 
     public ProdutoDAO() {
         con = new Conexao("jdbc:postgresql://localhost:5432/anlitaShopping", "postgres", "17110521");
@@ -74,11 +74,12 @@ public class ProdutoDAO {
             con.conectar();
             PreparedStatement ps = con.getConexao().prepareStatement(ATU);
             ps.setInt(1, qtd);
-            ps.setInt(1, id);
+            ps.setInt(2, id);
             ps.execute();
             con.desconectar();
         } catch (Exception e) {
             System.out.println("Erro na alteração: " + e.getMessage());
         }
     }
+
 }

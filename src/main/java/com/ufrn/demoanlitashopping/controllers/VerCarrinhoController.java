@@ -24,6 +24,8 @@
 
         @GetMapping("/verCarrinho")
         public void verCarrinho(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            int total = 0;
+
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
 
@@ -52,12 +54,14 @@
             // Verifica se o carrinho não está vazio
             if (carrinho != null && !carrinho.isEmpty()) {
                 // Itera sobre os itens do carrinho e os exibe na tabela
-                int total = 0;
+
                 for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
                     int productId = entry.getKey();
                     int quantity = entry.getValue();
 
+
                     Produto produto = ProdutoDAO.getProdutoById(productId);
+
 
                     // Exibir o produto na tabela
                     writer.println("<tr>");
@@ -67,14 +71,17 @@
                     writer.println("<td>" + "<a href='/addCarrinho?produtoId=" + produto.getId() + "&comando=remove'>Remover</a>");
                     writer.println("</tr>");
                     total = total + (quantity * produto.getPreco());
+
                 }
                 System.out.println("total: " + total);
             } else {
                 response.sendRedirect("/listaProdutosCliente");
             }
 
-            writer.println("</table>" + "<br>"
-                    + "<button>" + "<a href='/listaProdutosCliente' style='text-decoration: none; color: black '>Voltar</a>" + "</button>"
+            writer.println("</table>" + "<br>" + "<table border='1' style='background-color: white; margin-right: 160px; margin-top: -20px'>" + "<tr>"
+                    + "<th style='width: 85px'>Total</th>" + "<td>" + total + "</td>" + "</tr>" + "</table>" + "<button style='margin-top: -27; margin-left: 140px; height: 28px; width: 150px' >" +
+                    "<a href='/finalizarCompra' style='text-decoration: none; color: black'>Finalizar compra</a>" + "</button>" + "</br>" + "<button>"
+                    + "<a href='/listaProdutosCliente' style='text-decoration: none; color: black '>Voltar</a>" + "</button>"
 
             );
             writer.println("</body></html>");
