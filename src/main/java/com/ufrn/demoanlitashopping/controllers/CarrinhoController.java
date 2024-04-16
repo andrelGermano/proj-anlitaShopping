@@ -109,7 +109,6 @@ public class CarrinhoController {
         Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookies(clienteId, request);
 
         // Itera sobre os itens do carrinho e decrementa o estoque selecionado de cada produto
-        int total = 0;
         ProdutoDAO p = new ProdutoDAO();
         for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
             int productId = entry.getKey();

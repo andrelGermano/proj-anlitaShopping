@@ -52,6 +52,7 @@
             // Verifica se o carrinho não está vazio
             if (carrinho != null && !carrinho.isEmpty()) {
                 // Itera sobre os itens do carrinho e os exibe na tabela
+                int total = 0;
                 for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
                     int productId = entry.getKey();
                     int quantity = entry.getValue();
@@ -65,7 +66,9 @@
                     writer.println("<td>" + quantity + "</td>");
                     writer.println("<td>" + "<a href='/addCarrinho?produtoId=" + produto.getId() + "&comando=remove'>Remover</a>");
                     writer.println("</tr>");
+                    total = total + (quantity * produto.getPreco());
                 }
+                System.out.println("total: " + total);
             } else {
                 response.sendRedirect("/listaProdutosCliente");
             }
