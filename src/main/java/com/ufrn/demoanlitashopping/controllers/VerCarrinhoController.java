@@ -25,6 +25,7 @@
         @GetMapping("/verCarrinho")
         public void verCarrinho(HttpServletRequest request, HttpServletResponse response) throws IOException {
             int total = 0;
+            boolean d = true;
 
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
@@ -62,6 +63,9 @@
 
                     Produto produto = ProdutoDAO.getProdutoById(productId);
 
+                    if(!ProdutoDAO.estoqueMaiorOuIgualQueQuantidade(quantity, productId)){
+                        d = false;
+                    }
 
                     // Exibir o produto na tabela
                     writer.println("<tr>");
@@ -77,13 +81,24 @@
             } else {
                 response.sendRedirect("/listaProdutosCliente");
             }
+            if(d) {
+                writer.println("</table>" + "<br>" + "<table border='1' style='background-color: white; margin-right: 160px; margin-top: -20px'>" + "<tr>"
+                        + "<th style='width: 85px'>Total</th>" + "<td>" + total + "</td>" + "</tr>" + "</table>" + "<button style='margin-top: -27; margin-left: 140px; height: 28px; width: 150px' >" +
+                        "<a href='/finalizarCompra' style='text-decoration: none; color: black'>Finalizar compra</a>" + "</button>" + "</br>"
 
-            writer.println("</table>" + "<br>" + "<table border='1' style='background-color: white; margin-right: 160px; margin-top: -20px'>" + "<tr>"
-                    + "<th style='width: 85px'>Total</th>" + "<td>" + total + "</td>" + "</tr>" + "</table>" + "<button style='margin-top: -27; margin-left: 140px; height: 28px; width: 150px' >" +
-                    "<a href='/finalizarCompra' style='text-decoration: none; color: black'>Finalizar compra</a>" + "</button>" + "</br>" + "<button>"
-                    + "<a href='/listaProdutosCliente' style='text-decoration: none; color: black '>Voltar</a>" + "</button>"
+                );
+            }else{
+                writer.println("</table>" + "<br>" + "<table border='1' style='background-color: white; margin-right: 160px; margin-top: -20px'>" + "<tr>"
+                        + "<th style='width: 85px'>Total</th>" + "<td>" + total + "</td>" + "</tr>" + "</table>" +
+                        "<button disabled style='margin-top: -27; margin-left: 140px; height: 28px; width: 150px'>Finalizar compra</button>" + "</br>"
 
-            );
+                );
+
+            }
+
+            writer.println("<button>" +
+                    "<a href='/listaProdutosCliente' style='text-decoration: none; color: black '>Voltar</a> "
+                    + " </button>");
             writer.println("</body></html>");
         }
 

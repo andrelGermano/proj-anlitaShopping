@@ -121,12 +121,20 @@ public class CarrinhoController {
             Produto produto = ProdutoDAO.getProdutoById(productId);
             p.decrementarEstoque(quantity, productId);
         }
-        // Limpa o carrinho sobrescrevendo o cookie com um novo cookie vazio
-        Cookie carrinhoCookie = new Cookie("carrinho_" + clienteId, "");
-        carrinhoCookie.setMaxAge(0); // Define o tempo de vida do cookie como zero para removê-lo
-        carrinhoCookie.setPath("/"); // Define o mesmo caminho do cookie que deseja excluir
-        response.addCookie(carrinhoCookie); // Adiciona o novo cookie à resposta para que seja enviado ao navegador e remova o cookie existente
 
+        session.removeAttribute("carrinho_" + clienteId);
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (("carrinho_" + clienteId).equals(cookie.getName())) {
+                    cookie.setMaxAge(0); // Define o tempo de vida do cookie como zero para removê-lo
+                    cookie.setPath("/"); // Define o mesmo caminho do cookie que deseja excluir
+                    response.addCookie(cookie); // Adiciona o cookie à resposta para que seja enviado ao navegador e remova o cookie existente
+                    break;
+                }
+            }
+        }
         // Redireciona para a página de lista de produtos do cliente
         response.sendRedirect("/listaProdutosCliente");
     }

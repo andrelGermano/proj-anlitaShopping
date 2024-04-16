@@ -81,5 +81,17 @@ public class ProdutoDAO {
             System.out.println("Erro na alteração: " + e.getMessage());
         }
     }
+    public static boolean estoqueMaiorOuIgualQueQuantidade(int qtd, int id){
+        boolean check = false;
+        try {
+            Produto p = getProdutoById(id);
+            if(p.getEstoque() >= qtd){
+                return check=true;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro na verificação: " + e.getMessage());
+        }
+        return check;
+    }
 
 }
