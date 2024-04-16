@@ -25,7 +25,7 @@
         @GetMapping("/verCarrinho")
         public void verCarrinho(HttpServletRequest request, HttpServletResponse response) throws IOException {
             response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
+            PrintWriter writer = response.getWriter();
 
             HttpSession session = request.getSession();
             Integer clienteId = (Integer) session.getAttribute("clienteId");
@@ -38,10 +38,16 @@
             Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookies(clienteId, request);
             System.out.println("Carrinho do cliente: " + carrinho);
 
-            out.println("<html><body>");
-            out.println("<h1>Carrinho de Compras</h1>");
-            out.println("<table border='1'>");
-            out.println("<tr><th>Nome</th><th>Preço</th><th>Quantidade</th><th>Remover</th></tr>");
+            writer.println("<html>" + "<head>"+ "<title>Carrinho</title>"
+                    +"</head>" + "<body style='display: flex; flex-direction: column;  align-items: center; background-color: lightblue'>"
+                    + "<h1>Carrinho de Compras</h1>"
+                    + "<table border='1' style='background: white'>" +
+                    "<tr><th>Nome</th>" +
+                    "<th>Preço</th>" +
+                    "<th>Quantidade</th>" +
+                    "<th>Remover</th></tr>"
+            );
+
 
             // Verifica se o carrinho não está vazio
             if (carrinho != null && !carrinho.isEmpty()) {
@@ -53,19 +59,22 @@
                     Produto produto = ProdutoDAO.getProdutoById(productId);
 
                     // Exibir o produto na tabela
-                    out.println("<tr>");
-                    out.println("<td>" + produto.getNome() + "</td>");
-                    out.println("<td>" + produto.getPreco() + "</td>");
-                    out.println("<td>" + quantity + "</td>");
-                    out.println("<td>" + "<a href='/addCarrinho?produtoId=" + produto.getId() + "&comando=remove'>Remover</a>");
-                    out.println("</tr>");
+                    writer.println("<tr>");
+                    writer.println("<td>" + produto.getNome() + "</td>");
+                    writer.println("<td>" + produto.getPreco() + "</td>");
+                    writer.println("<td>" + quantity + "</td>");
+                    writer.println("<td>" + "<a href='/addCarrinho?produtoId=" + produto.getId() + "&comando=remove'>Remover</a>");
+                    writer.println("</tr>");
                 }
             } else {
-                out.println("<tr><td colspan='4'>Carrinho vazio</td></tr>");
+                response.sendRedirect("/listaProdutosCliente");
             }
 
-            out.println("</table>");
-            out.println("</body></html>");
+            writer.println("</table>" + "<br>"
+                    + "<button>" + "<a href='/listaProdutosCliente' style='text-decoration: none; color: black '>Voltar</a>" + "</button>"
+
+            );
+            writer.println("</body></html>");
         }
 
     }

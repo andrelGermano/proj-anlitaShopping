@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <title>Cadastrando Produtos</title>
 </head>
-<body>
+<body style="display: flex; flex-direction: column;  align-items: center; background-color: lightblue">
     <h1>Espaço do Lojista</h1>
     <h2>Cadastro de Produtos</h2>
     <form action="/cadastrarProduto" method="post">
-        <label>Nome:</label> <input type="text" name="nome" id="nome"> </br>
-        <label>Descrição:</label> <input type="text" name="descricao" id="descricao"> </br>
-        <label>Preço:</label> <input type="text" name="preco" id="preco"> </br>
-        <label>Estoque:</label> <input type="number" name="estoque" id="estoque"> </br>
-        <button type="submit">Cadastrar</button>
+        <label>Nome:</label> <br>
+        <input type="text" name="nome" id="nome"> </br>
+        <label>Descrição:</label> <br>
+        <input type="text" name="descricao" id="descricao"> </br>
+        <label>Preço:</label> <br>
+        <input type="text" name="preco" id="preco"> </br>
+        <label>Estoque:</label> <br>
+        <input type="number" name="estoque" id="estoque"> </br>
+        <button type="submit" style="margin-left: 50px; margin-top: 10px">Cadastrar</button>
     </form>
-
+    <br>
+    <button><a href="exibirProdutos.html" style="text-decoration: none; color: black; margin-top: 10px">Voltar</a></button>
 </body>
 </html>
