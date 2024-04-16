@@ -1,5 +1,7 @@
 package com.ufrn.demoanlitashopping.controllers;
 
+import com.ufrn.demoanlitashopping.classes.Produto;
+import com.ufrn.demoanlitashopping.persistencia.ProdutoDAO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -94,4 +96,28 @@ public class CarrinhoController {
         return carrinho;
     }
 
+    @GetMapping("/finalizarCompra")
+    public void finalizarCompra(@RequestParam int produtoId, @RequestParam String comando, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Integer clienteId = (Integer) session.getAttribute("clienteId");
+
+
+        // Cria uma instância de CarrinhoController
+        CarrinhoController carrinhoController = new CarrinhoController();
+
+        // Obtém o carrinho do cliente dos cookies usando o método de instância
+        Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookies(clienteId, request);
+
+        // Itera sobre os itens do carrinho e decrementa o estoque selecionado de cada produto
+        int total = 0;
+        ProdutoDAO p = new ProdutoDAO();
+        for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
+            int productId = entry.getKey();
+            int quantity = entry.getValue();
+
+            Produto produto = ProdutoDAO.getProdutoById(productId);
+            p.decrementarEstoque(quantity, productId);
+        }
+
+    }
 }
