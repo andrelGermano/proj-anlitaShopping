@@ -5,6 +5,7 @@
     import com.ufrn.demoanlitashopping.persistencia.ProdutoDAO;
     import jakarta.servlet.http.HttpServletRequest;
     import jakarta.servlet.http.HttpServletResponse;
+    import jakarta.servlet.http.HttpSession;
     import org.springframework.stereotype.Controller;
     import org.springframework.web.bind.annotation.GetMapping;
 
@@ -15,16 +16,26 @@
     @Controller
     public class VerCarrinhoController {
 
+        private final HttpServletRequest httpServletRequest;
+
+        public VerCarrinhoController(HttpServletRequest httpServletRequest) {
+            this.httpServletRequest = httpServletRequest;
+        }
+
         @GetMapping("/verCarrinho")
         public void verCarrinho(HttpServletRequest request, HttpServletResponse response) throws IOException {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
 
+            HttpSession session = request.getSession();
+            Integer clienteId = (Integer) session.getAttribute("clienteId");
+
+
             // Cria uma instância de CarrinhoController
             CarrinhoController carrinhoController = new CarrinhoController();
 
             // Obtém o carrinho do cliente dos cookies usando o método de instância
-            Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookiesPublic(request);
+            Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookies(clienteId, request);
             System.out.println("Carrinho do cliente: " + carrinho);
 
             out.println("<html><body>");

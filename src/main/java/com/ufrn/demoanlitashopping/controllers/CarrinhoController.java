@@ -46,13 +46,13 @@ public class CarrinhoController {
         session.setAttribute("carrinho_" + clienteId, carrinho);
 
         // Salvar o carrinho nos cookies
-        salvarCarrinhoNosCookies(carrinho, response);
+        salvarCarrinhoNosCookies(clienteId, carrinho, response);
 
         // Redirecionar de volta à página de lista de produtos
         response.sendRedirect("listaProdutos.html");
     }
 
-    private void salvarCarrinhoNosCookies(Map<Integer, Integer> carrinho, HttpServletResponse response) {
+    private void salvarCarrinhoNosCookies(Integer clienteId, Map<Integer, Integer> carrinho, HttpServletResponse response) {
         StringBuilder carrinhoString = new StringBuilder();
         for (Map.Entry<Integer, Integer> entry : carrinho.entrySet()) {
             carrinhoString.append(entry.getKey()).append(":").append(entry.getValue()).append("_");
@@ -60,20 +60,17 @@ public class CarrinhoController {
         if (carrinhoString.length() > 0) {
             carrinhoString.deleteCharAt(carrinhoString.length() - 1);
         }
-        Cookie carrinhoCookie = new Cookie("carrinho", carrinhoString.toString());
+        Cookie carrinhoCookie = new Cookie("carrinho_" + clienteId, carrinhoString.toString());
         carrinhoCookie.setMaxAge(48 * 60 * 60); // Define a expiração do cookie para 48 horas
         response.addCookie(carrinhoCookie);
     }
-    public Map<Integer, Integer> getCarrinhoFromCookiesPublic(HttpServletRequest request) {
-        return getCarrinhoFromCookies(request);
-    }
 
-    private Map<Integer, Integer> getCarrinhoFromCookies(HttpServletRequest request) {
+    public Map<Integer, Integer> getCarrinhoFromCookies(Integer clienteId, HttpServletRequest request) {
         Map<Integer, Integer> carrinho = new HashMap<>();
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("carrinho".equals(cookie.getName())) {
+                if (("carrinho_" + clienteId).equals(cookie.getName())) {
                     String cookieValue = cookie.getValue();
                     if (!cookieValue.isEmpty()) {
                         String[] itens = cookieValue.split("_");
@@ -96,4 +93,5 @@ public class CarrinhoController {
         }
         return carrinho;
     }
+
 }

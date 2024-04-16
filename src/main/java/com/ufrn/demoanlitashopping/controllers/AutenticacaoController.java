@@ -27,28 +27,39 @@ public class AutenticacaoController {
         Lojista l = new Lojista(email, senha);
 
         if(cDAO.procurar(c)){
-            HttpSession session = request.getSession();
-            session.setAttribute("logado", true);
-
+            int clienteId = cDAO.selecionarId(c);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("clienteLogado", true);
+            setClienteIdNaSessao(request, clienteId);
             response.sendRedirect("listaProdutos.html");
         }
         else if (lDAO.procurar(l)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("logado", true);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("lojistaLogado", true);
 
             response.sendRedirect("exibirProdutos.html");
         } else {
             response.sendRedirect("index.html?msg=Login falhou");
         }
-
-
     }
+
 
     @RequestMapping(value = "/doLogout", method = RequestMethod.GET)
     public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         session.invalidate();
-
+        limparClienteIdNaSessao(request);
         response.sendRedirect("index.html?msg=Usuario deslogado");
     }
+
+    private void setClienteIdNaSessao(HttpServletRequest request, int clienteId) {
+        HttpSession session = request.getSession();
+        session.setAttribute("clienteId", clienteId);
+    }
+
+    private void limparClienteIdNaSessao(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("clienteId");
+    }
+
 }
