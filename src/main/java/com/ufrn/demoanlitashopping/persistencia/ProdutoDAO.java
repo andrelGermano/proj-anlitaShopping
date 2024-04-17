@@ -81,6 +81,7 @@ public class ProdutoDAO {
             System.out.println("Erro na alteração: " + e.getMessage());
         }
     }
+
     public static boolean estoqueMaiorOuIgualQueQuantidade(int qtd, int id){
         boolean check = false;
         try {
@@ -93,5 +94,4 @@ public class ProdutoDAO {
         }
         return check;
     }
-
 }

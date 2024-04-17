@@ -21,6 +21,7 @@ public class CadastroController {
 
         ClienteDAO cDAO = new ClienteDAO();
         Cliente c = new Cliente(nome, email, senha);
+
         try{
             cDAO.cadastrar(c);
             response.sendRedirect("cadastro.html?msg=Cadastrado com sucesso!");
@@ -28,6 +29,5 @@ public class CadastroController {
             System.out.println(e.getMessage());
             response.sendRedirect("cadastro.html?msg=Erro ao cadastrar");
         }
-
     }
 }

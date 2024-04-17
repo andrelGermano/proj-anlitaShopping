@@ -1,6 +1,5 @@
 package com.ufrn.demoanlitashopping.controllers;
 
-
 import com.ufrn.demoanlitashopping.classes.Produto;
 import com.ufrn.demoanlitashopping.persistencia.ProdutoDAO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
-
 import java.io.IOException;
 
 @Controller
@@ -20,12 +17,9 @@ public class ProdutoController {
     @GetMapping("/listarProdutos")
     public void listarProdutos(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
         ProdutoDAO dao = new ProdutoDAO();
         var writer = response.getWriter();
-
         String browser = request.getHeader("pipoca");
-
         var listarProdutos = dao.listaProdutos();
 
         response.setContentType("text/html");
@@ -59,12 +53,13 @@ public class ProdutoController {
         );
 
         writer.println("</body>" + "</html>");
-
     }
+
     @GetMapping("/redirectCadastro")
     public void redirectCadastro(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.sendRedirect("cadastroProdutos.html");
     }
+
     @PostMapping("/cadastrarProduto")
     public void cadastrar(HttpServletRequest request, HttpServletResponse response) throws IOException{
         var nome = request.getParameter("nome");
@@ -86,7 +81,5 @@ public class ProdutoController {
         }else{
             response.sendRedirect("index.html");
         }
-
     }
-
 }

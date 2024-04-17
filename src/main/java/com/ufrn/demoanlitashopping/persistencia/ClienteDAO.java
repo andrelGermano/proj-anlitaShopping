@@ -1,10 +1,8 @@
 package com.ufrn.demoanlitashopping.persistencia;
 
 import com.ufrn.demoanlitashopping.classes.Cliente;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 
 public class ClienteDAO {
     private Conexao con;

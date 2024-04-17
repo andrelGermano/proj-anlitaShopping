@@ -29,26 +29,25 @@ public class AutenticacaoController {
         if(cDAO.procurar(c)){
             int clienteId = cDAO.selecionarId(c);
             HttpSession session = request.getSession(true);
-            session.setAttribute("clienteLogado", true);
+            session.setAttribute("logado", true);
             setClienteIdNaSessao(request, clienteId);
             response.sendRedirect("listaProdutos.html");
-        }
-        else if (lDAO.procurar(l)) {
+        }else if(lDAO.procurar(l)) {
             HttpSession session = request.getSession(true);
-            session.setAttribute("lojistaLogado", true);
+            session.setAttribute("logado", true);
 
             response.sendRedirect("exibirProdutos.html");
-        } else {
+        }else{
             response.sendRedirect("index.html?msg=Login falhou");
         }
     }
 
-
     @RequestMapping(value = "/doLogout", method = RequestMethod.GET)
     public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        session.invalidate();
+        session.setAttribute("logado", false);
         limparClienteIdNaSessao(request);
+        session.invalidate();
         response.sendRedirect("index.html?msg=Usuario deslogado");
     }
 
@@ -61,5 +60,4 @@ public class AutenticacaoController {
         HttpSession session = request.getSession();
         session.removeAttribute("clienteId");
     }
-
 }

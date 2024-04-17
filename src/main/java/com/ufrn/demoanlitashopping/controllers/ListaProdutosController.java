@@ -16,9 +16,7 @@ public class ListaProdutosController {
 
         ProdutoDAO dao = new ProdutoDAO();
         var writer = response.getWriter();
-
         String browser = request.getHeader("pipoca");
-
         var listarProdutos = dao.listaProdutos();
 
         response.setContentType("text/html");
@@ -36,8 +34,9 @@ public class ListaProdutosController {
                 "<th>Descrição</th>" +
                 "<th>Preço</th>" +
                 "<th>Estoque</th>" +
-                "<th>Carrinho</th>" +  // Adicionei uma coluna para o botão "Adicionar ao Carrinho"
-                "</tr>");
+                "<th>Carrinho</th>" +  // Coluna para o botão "Adicionar ao Carrinho"
+                "</tr>"
+        );
 
         for (var t1 : listarProdutos){
             if(t1.getEstoque() != 0) {
@@ -48,7 +47,7 @@ public class ListaProdutosController {
                         "<td>" + t1.getEstoque() + "</td>" +
                         "<td>" + "<a href='/addCarrinho?produtoId=" + t1.getId() + "&comando=add'>Adicionar</a>" + "</td>" + // Link para adicionar ao carrinho
                         "</tr>"
-                        );
+                );
             } else {
                 writer.println("<tr>" +
                         "<td>" + t1.getNome() + "</td>" +
@@ -56,17 +55,16 @@ public class ListaProdutosController {
                         "<td>" + t1.getPreco() + "</td>" +
                         "<td>" + t1.getEstoque() + "</td>" +
                         "<td>Sem Estoque</td>" +
-                        "</tr>");
+                        "</tr>"
+                );
             }
         }
         writer.println("</table>" + "</br>" + "<button>"
                 + "<a href='/verCarrinho' style='text-decoration: none; color: black; margin-top: 10px '>Ver carrinho</a>"
-                + "</button>" + "</br>");
+                + "</button>" + "</br>"
+        );
         writer.println("<button>" + "<a href='listaProdutos.html' style='text-decoration: none; color: black'>Voltar</a>" + "</button>");
 
-        writer.println("</html>" +
-                "</body>");
-
+        writer.println("</html>" + "</body>");
     }
-
 }

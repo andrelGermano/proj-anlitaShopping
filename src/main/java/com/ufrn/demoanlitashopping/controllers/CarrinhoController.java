@@ -23,16 +23,16 @@ public class CarrinhoController {
 
         Produto p = ProdutoDAO.getProdutoById(produtoId);
 
-        // Obtém o ID do cliente da sessão (você precisa implementar a lógica para armazenar o ID do cliente na sessão quando ele fizer login)
+        // Obtém o ID do cliente da sessão
         Integer clienteId = (Integer) session.getAttribute("clienteId");
 
-        // Verificar se o carrinho já existe na sessão do usuário
+        // Verifica se o carrinho já existe na sessão do usuário
         Map<Integer, Integer> carrinho = (Map<Integer, Integer>) session.getAttribute("carrinho_" + clienteId);
         if (carrinho == null) {
             carrinho = new HashMap<>();
         }
 
-        // Adicionar ou remover o produto do carrinho
+        // Adiciona ou remove o produto do carrinho
         if ("add".equals(comando)) {
             p.diminuiEstoque();
             carrinho.put(produtoId, carrinho.getOrDefault(produtoId, 0) + 1);
@@ -48,13 +48,13 @@ public class CarrinhoController {
             }
         }
 
-        // Armazenar o carrinho atualizado na sessão do usuário usando o ID do cliente como chave
+        // Armazena o carrinho atualizado na sessão do usuário usando o ID do cliente como chave
         session.setAttribute("carrinho_" + clienteId, carrinho);
 
-        // Salvar o carrinho nos cookies
+        // Salva o carrinho nos cookies
         salvarCarrinhoNosCookies(clienteId, carrinho, response);
 
-        // Redirecionar de volta à página de lista de produtos
+        // Redireciona de volta à página de lista de produtos
         response.sendRedirect("listaProdutos.html");
     }
 
@@ -67,7 +67,7 @@ public class CarrinhoController {
             carrinhoString.deleteCharAt(carrinhoString.length() - 1);
         }
         Cookie carrinhoCookie = new Cookie("carrinho_" + clienteId, carrinhoString.toString());
-        carrinhoCookie.setMaxAge(48 * 60 * 60); // Define a expiração do cookie para 48 horas
+        carrinhoCookie.setMaxAge(48 * 60 * 60); // O cookie vai expirar em 48 horas
         response.addCookie(carrinhoCookie);
     }
 
@@ -104,12 +104,9 @@ public class CarrinhoController {
     public void finalizarCompra( HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Integer clienteId = (Integer) session.getAttribute("clienteId");
-
-
-        // Cria uma instância de CarrinhoController
         CarrinhoController carrinhoController = new CarrinhoController();
 
-        // Obtém o carrinho do cliente dos cookies usando o método de instância
+        // Obtém o carrinho do cliente dos cookies
         Map<Integer, Integer> carrinho = carrinhoController.getCarrinhoFromCookies(clienteId, request);
 
         // Itera sobre os itens do carrinho e decrementa o estoque selecionado de cada produto
@@ -122,8 +119,10 @@ public class CarrinhoController {
             p.decrementarEstoque(quantity, productId);
         }
 
+        // Apaga o carrinho da sessão pelo id do cliente
         session.removeAttribute("carrinho_" + clienteId);
 
+        // Apaga o cookie
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {

@@ -1,6 +1,7 @@
 package com.ufrn.demoanlitashopping.classes;
 
 public class Lojista {
+
     private int id;
     private String nome;
     private String email;
